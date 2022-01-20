@@ -29,8 +29,12 @@ export class AuthorizationService {
       return token;
    }
 
-   async register(username: string, password: string): Promise<User> {
-      const candidate = await this.authorizationRepository.find({ where: { username } });
+   async register(username: string, password: string, confirm: string): Promise<User> {
+      if (password !== confirm) {
+         throw new Error("Пароли не совпадают!");
+      }
+
+      const candidate = await this.authorizationRepository.findOne({ where: { username } });
 
       if (candidate) {
          throw new Error("Пользователь с таким username уже зарегистрирован!");
@@ -39,8 +43,13 @@ export class AuthorizationService {
       const hashedPassword = await bcrypt.hash(password, 7);
       const user = this.authorizationRepository.create({ username, password: hashedPassword });
 
-      user.role.type = roleType.USER;
-      user.role.description = roleDescription.USERDESC;
+      const defaultRole = await this.roleRepository.findOne({ type: roleType.USER });
+
+      if (!defaultRole) {
+         throw new Error("Ошибка сервера, роль не найдена");
+      }
+
+      user.role = defaultRole;
 
       return await user.save();
    }

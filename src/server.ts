@@ -2,9 +2,10 @@ import express, { RequestHandler } from "express";
 import http from "http";
 import { Connection, createConnection } from "typeorm";
 import { getOrmConfig } from "./config/typeorm";
-import { EMethod, ServerInterface, THandler } from "./interfaces/server.interface";
+import { EMethod, ServerInterface, THandler, validationArray } from "./interfaces/server.interface";
 import { configService } from "./services/config.service";
 import cors from "cors";
+import { validationResult } from "express-validator";
 
 export class ServerInstance implements ServerInterface {
    private readonly app: express.Application;
@@ -42,56 +43,62 @@ export class ServerInstance implements ServerInterface {
       });
    }
 
-   addHandler(method: EMethod, route: string, handler: THandler, middlewares?: RequestHandler[]): void {
+   addHandler(method: EMethod, route: string, handler: THandler, middlewares?: validationArray): void {
       switch (method) {
          case "GET":
             if (middlewares) {
-               this.app.get(route, ...middlewares, async (req, res) => {
-                  const result = await handler(req);
+               this.app.get(route, ...middlewares, async (req: express.Request, res: express.Response) => {
+                  const result = await handler(req, res);
                   res.json(result);
                });
             } else {
                this.app.get(route, async (req, res) => {
-                  const result = await handler(req);
+                  const result = await handler(req, res);
                   res.json(result);
                });
             }
             return;
          case "POST":
             if (middlewares) {
-               this.app.post(route, ...middlewares, async (req, res) => {
-                  const result = await handler(req);
+               this.app.post(route, ...middlewares, async (req: express.Request, res: express.Response) => {
+                  const errors = validationResult(req);
+                  if (!errors.isEmpty()) {
+                     const err = errors.array();
+                     res.status(422).json({ errors: err });
+                     return;
+                  }
+                  const result = await handler(req, res);
                   res.json(result);
                });
             } else {
                this.app.post(route, async (req, res) => {
-                  const result = await handler(req);
+                  const result = await handler(req, res);
                   res.json(result);
                });
             }
             return;
          case "PUT":
             if (middlewares) {
-               this.app.put(route, ...middlewares, async (req, res) => {
-                  const result = await handler(req);
+               this.app.put(route, ...middlewares, async (req: express.Request, res: express.Response) => {
+                  const result = await handler(req, res);
                   res.json(result);
                });
             } else {
                this.app.put(route, async (req, res) => {
-                  const result = await handler(req);
+                  const result = await handler(req, res);
                   res.json(result);
                });
             }
             return;
          case "DELETE":
             if (middlewares) {
-               this.app.delete(route, ...middlewares, async (req, res) => {
-                  const result = await handler(req);
+               this.app.delete(route, ...middlewares, async (req: express.Request, res: express.Response) => {
+                  const result = await handler(req, res);
                   res.json(result);
                });
             } else {
                this.app.delete(route, async (req, res) => {
-                  const result = await handler(req);
+                  const result = await handler(req, res);
                   res.json(result);
                });
             }

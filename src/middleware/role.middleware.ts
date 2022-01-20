@@ -1,5 +1,5 @@
 import { configService } from "../services/config.service";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import express from "express";
 
 export function roleMiddleware(role: string) {
