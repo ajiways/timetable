@@ -11,7 +11,7 @@ export function getOrmConfig(): PostgresConnectionOptions {
       password: configService.dbPassword,
       database: configService.dbName,
       namingStrategy: new SnakeNamingStrategy(),
-      entities: ["dist/entities/*.entity{.js,.ts}"],
+      entities: ["timetable/entities/*.entity{.js,.ts}"],
       synchronize: true,
    };
 }
