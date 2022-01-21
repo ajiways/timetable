@@ -58,5 +58,13 @@ class ConfigService {
       }
       return secret;
    }
+
+   get refreshSecret(): string {
+      const refreshSecret = process.env.REFRESH_SECRET;
+      if (!refreshSecret) {
+         throw new Error("Нет секретного ключа");
+      }
+      return refreshSecret;
+   }
 }
 export const configService = new ConfigService();
