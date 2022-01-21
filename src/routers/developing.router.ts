@@ -2,7 +2,6 @@ import { DevelopingController } from "../controllers/developing.controller";
 import { EMethod } from "../interfaces/server.interface";
 import { serverInstance } from "../main";
 import { authMiddleware } from "../middleware/authorization.middleware";
-import { roleMiddleware } from "../middleware/role.middleware";
 import { DevelopingService } from "../services/developing.service";
 
 export function devRouter(): void {
@@ -12,8 +11,8 @@ export function devRouter(): void {
 
    serverInstance.addHandler(
       EMethod.GET,
-      "/dev/test",
-      developingController.getAllUsers.bind(developingController),
-      [authMiddleware, roleMiddleware("ADMIN")]
+      "/dev/userdata",
+      developingController.getUserInfo.bind(developingController),
+      [authMiddleware]
    );
 }

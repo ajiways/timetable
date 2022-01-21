@@ -23,4 +23,10 @@ export function authorizationRouter(): void {
       authorizationController.login.bind(authorizationController),
       [loginValidatorMiddleware]
    );
+
+   serverInstance.addHandler(
+      EMethod.GET,
+      "/auth/refresh",
+      authorizationController.refresh.bind(authorizationController)
+   );
 }

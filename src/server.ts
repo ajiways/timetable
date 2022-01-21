@@ -4,6 +4,7 @@ import { Connection, createConnection } from "typeorm";
 import { getOrmConfig } from "./config/typeorm";
 import { EMethod, ServerInterface, THandler, validationArray } from "./interfaces/server.interface";
 import { configService } from "./services/config.service";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import { validationResult } from "express-validator";
 
@@ -19,6 +20,7 @@ export class ServerInstance implements ServerInterface {
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: true }));
       this.app.use(cors());
+      this.app.use(cookieParser());
    }
 
    connect(): Promise<void> {
