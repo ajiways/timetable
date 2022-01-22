@@ -18,7 +18,7 @@ export class AuthorizationController {
          const userData = await this.authorizationService.login(req.body.username, req.body.password);
 
          res.status(200);
-         res.cookie("refreshToken", userData.resreshToken, {
+         res.cookie("resreshToken", userData.resreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
          });
@@ -40,10 +40,11 @@ export class AuthorizationController {
             req.body.password,
             req.body.confirm
          );
-         res.cookie("refreshToken", userData.refreshToken, {
+         res.cookie("resreshToken", userData.resreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
          });
+
          return userData;
       } catch (error) {
          res.status(400);
@@ -56,10 +57,9 @@ export class AuthorizationController {
       res: express.Response
    ): Promise<string | Record<string, string | UserDTO>> {
       try {
-         const { refreshToken } = req.cookies;
-         const userData = await this.authorizationService.refresh(refreshToken);
-         console.log(userData);
-         res.cookie("refreshToken", userData.resreshToken, {
+         const { resreshToken } = req.cookies;
+         const userData = await this.authorizationService.refresh(resreshToken);
+         res.cookie("resreshToken", userData.resreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
          });

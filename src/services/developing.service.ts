@@ -13,9 +13,7 @@ export class DevelopingService {
       return await this.authorizationRepository.find();
    }
 
-   async getUserInfo(
-      request: express.Request
-   ): Promise<Record<string, string | User | Record<string, string>> | string> {
+   async getUserInfo(request: express.Request) {
       console.log("GET USER INFO");
       const user = await this.authorizationRepository.findOne({ where: { id: request.user.id } });
 
@@ -25,21 +23,23 @@ export class DevelopingService {
 
       return {
          userdata: user,
-         para1: {
-            name: "Name Para 1",
-            teacher: "Teacher Para 1",
-            time: "8:00 - 10:00",
-         },
-         para2: {
-            name: "Name Para 2",
-            teacher: "Teacher Para 2",
-            time: "11:00 - 13:00",
-         },
-         para3: {
-            name: "Name Para 3",
-            teacher: "Teacher Para 3",
-            time: "14:00 - 16:00",
-         },
+         pars: [
+            {
+               name: "Name Para 1",
+               teacher: "Teacher Para 1",
+               time: "8:00 - 10:00",
+            },
+            {
+               name: "Name Para 2",
+               teacher: "Teacher Para 2",
+               time: "11:00 - 13:00",
+            },
+            {
+               name: "Name Para 3",
+               teacher: "Teacher Para 3",
+               time: "14:00 - 16:00",
+            },
+         ],
       };
    }
 }
