@@ -13,9 +13,7 @@ export class DevelopingController {
       return this.developingService.getAllUsers();
    }
 
-   async getUserInfo(
-      request: express.Request
-   ): Promise<string | Record<string, string | User | Record<string, string>>> {
+   async getUserInfo(request: express.Request) {
       return await this.developingService.getUserInfo(request);
    }
 }

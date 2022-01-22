@@ -17,9 +17,9 @@ export class ServerInstance implements ServerInterface {
    constructor() {
       this.port = configService.port;
       this.app = express();
+      this.app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: true }));
-      this.app.use(cors());
       this.app.use(cookieParser());
    }
 
